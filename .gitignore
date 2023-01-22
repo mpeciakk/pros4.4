@@ -6,7 +6,7 @@ pros.img
 pros.vdi
 kernel.map
 log.txt
-cmake-build-debug-wsl
+cmake-build-debug
 Build
 build
 Toolchain/Build
