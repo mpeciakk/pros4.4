@@ -1,78 +1,80 @@
-.set ALIGN,      1 << 0
-.set MEMINFO,    1 << 1             # provide memory map by grub
-.set FLAGS,      ALIGN | MEMINFO
-.set MAGIC,      0x1BADB002
-.set CHECKSUM,   -(MAGIC + FLAGS)
+global _loader
+extern kmain
 
-# Multiboot header that marks the program as kernel
-.section .multiboot
-.align 4
-.long MAGIC
-.long FLAGS
-.long CHECKSUM
+MULTIBOOT_PAGE_ALIGN equ 1 << 0
+MULTIBOOT_MEMINFO    equ 1 << 1
+MULTIBOOT_MAGIC      equ 0x1BADB002
+MULTIBOOT_FLAGS	     equ MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMINFO
+MULTIBOOT_CHECKSUM   equ -(MULTIBOOT_MAGIC + MULTIBOOT_FLAGS)
 
-.set KERNEL_VIRTUAL_BASE, 0xC0000000
-.set KERNEL_PAGE_NUMBER, (KERNEL_VIRTUAL_BASE >> 22)
+KERNEL_VIRTUAL_BASE  equ 0xC0000000
+KERNEL_PAGE_NUMBER   equ (KERNEL_VIRTUAL_BASE >> 22)
 
-.section .bss, "aw", @nobits
-.align 16
-stack_bottom:
-.skip 16384 # 16KB
-stack_top:
+section .multiboot
+align 4
+dd MULTIBOOT_MAGIC
+dd MULTIBOOT_FLAGS
+dd MULTIBOOT_CHECKSUM
 
-.section .data
-.align 0x1000
-.global bootPageDirectory
+section .data
+align 0x1000
 bootPageDirectory:
-    # identity map first page (4MB)
-    .long 0x00000083
+    ; identity map first page (4MB)
+    dd 0x00000083
 
-    # zero pages before kernel
-    .rept (KERNEL_PAGE_NUMBER - 1)
-    .long 0
-    .endr
+    ; zero pages before kernel
+    times (KERNEL_PAGE_NUMBER - 1) dd 0
 
-    # identity map kernel page (4MB)
-    .long 0x00000083
+    ; identity map kernel page (4MB)
+    dd 0x00000083
 
-    # pages after kernel
-    .rept (1024 - KERNEL_PAGE_NUMBER - 1)
-    .long 0
-    .endr
+    ; pages after kernel
+    times (1024 - KERNEL_PAGE_NUMBER - 1) dd 0
 
-.section .text
-.global _start
-.type _start, @function
-_start:
-    # load our boot page directory
-    mov $(bootPageDirectory - KERNEL_VIRTUAL_BASE), %ecx
-    mov %ecx, %cr3
+section .text
+align 4
 
-    # enable 4 mb pages
-    mov %cr4, %ecx
-    or $0x00000010, %ecx
-    mov %ecx, %cr4
+;loader equ (_loader - 0xC0000000)
+;global loader
 
-    # enable paging
-    mov %cr0, %ecx
-    or $0x80000001, %ecx
-    mov %ecx, %cr0
+_loader:
+    ; load our boot page directory
+    mov ecx, (bootPageDirectory - KERNEL_VIRTUAL_BASE)
+    mov cr3, ecx
 
-    # jump to higher half code
-    lea 4f, %ecx
-    jmp *%ecx
+    ; enable 4 mb pages
+    mov ecx, cr4
+    or ecx, 0x00000010
+    mov cr4, ecx
 
-4:
-    movl $0, bootPageDirectory
-    invlpg 0
+    ; enable paging
+    mov ecx, cr0
+    or ecx, 0x80000001
+    mov cr0, ecx
 
-    mov $stack_top, %esp
+    ; jump to higher half code
+    lea ecx, [startInHigherHalf]
+    jmp ecx
 
-    push %ebx
+startInHigherHalf:
+    ; unmap first 4MB of physical address space
+    mov dword [bootPageDirectory], 0
+    invlpg [0]
+
+    mov esp, stack_top
+    push eax ; multiboot magic number
+
+    push ebx ; multiboot info structure
     call kmain
 
     cli
-1:
-    hlt
-    jmp 1b
 
+loopb:
+    hlt
+    jmp loopb
+
+section .bss
+align 32
+stack_bottom:
+    resb 16384 ; 16KB
+stack_top:
