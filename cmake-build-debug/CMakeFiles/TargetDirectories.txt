@@ -1,0 +1,3 @@
+/home/m/Cloud/Projects/pros4.4/cmake-build-debug/CMakeFiles/pros.bin.dir
+/home/m/Cloud/Projects/pros4.4/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/m/Cloud/Projects/pros4.4/cmake-build-debug/CMakeFiles/rebuild_cache.dir
