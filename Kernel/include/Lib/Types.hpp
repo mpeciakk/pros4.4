@@ -1,5 +1,5 @@
-#ifndef __TYPES_HPP
-#define __TYPES_HPP
+#ifndef PROS_TYPES_HPP
+#define PROS_TYPES_HPP
 
 using i8 = signed char;
 using u8 = unsigned char;

@@ -1,5 +1,5 @@
-#ifndef __STRING_HPP
-#define __STRING_HPP
+#ifndef PROS_STRING_HPP
+#define PROS_STRING_HPP
 
 #include <Lib/Types.hpp>
 

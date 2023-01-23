@@ -1,5 +1,5 @@
-#ifndef __VGA_HPP
-#define __VGA_HPP
+#ifndef PROS_VGA_HPP
+#define PROS_VGA_HPP
 
 #include <Hardware/Port.hpp>
 #include <Lib/Types.hpp>

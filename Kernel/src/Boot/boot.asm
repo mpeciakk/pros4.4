@@ -34,9 +34,6 @@ bootPageDirectory:
 section .text
 align 4
 
-;loader equ (_loader - 0xC0000000)
-;global loader
-
 _loader:
     ; load our boot page directory
     mov ecx, (bootPageDirectory - KERNEL_VIRTUAL_BASE)

@@ -1,5 +1,5 @@
-#ifndef __TESTS_HPP
-#define __TESTS_HPP
+#ifndef PROS_TESTS_HPP
+#define PROS_TESTS_HPP
 
 #include <Lib/Log.hpp>
 #include <Lib/String.hpp>

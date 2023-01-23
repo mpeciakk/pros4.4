@@ -1,5 +1,5 @@
-#ifndef __LOG_HPP
-#define __LOG_HPP
+#ifndef PROS_LOG_HPP
+#define PROS_LOG_HPP
 
 #include <stdarg.h>
 
