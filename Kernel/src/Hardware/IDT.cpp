@@ -8,7 +8,8 @@ extern "C" void handleInterrupt(Registers registers) {
     InterruptManager::instance().handleInterrupt(registers);
 }
 
-InterruptManager::InterruptManager() : masterCommandPort(0x20), masterDataPort(0x21), slaveCommandPort(0xA0), slaveDataPort(0xA1) {
+InterruptManager::InterruptManager() : masterCommandPort(0x20), masterDataPort(0x21), slaveCommandPort(0xA0),
+                                       slaveDataPort(0xA1) {
     masterCommandPort.write(0x11);
     slaveCommandPort.write(0x11);
 
@@ -89,11 +90,11 @@ void InterruptManager::init() {
 }
 
 static inline void outb(u16 port, u8 val) {
-    asm volatile ( "outb %0, %1" : : "a"(val), "Nd"(port) );
+    asm volatile ( "outb %0, %1" : : "a"(val), "Nd"(port));
 }
 
-void InterruptManager::handleInterrupt(Registers& registers) {
-    klog(3, "IDT: Got interrupt - %d", registers.interrupt);
+void InterruptManager::handleInterrupt(Registers &registers) {
+    //klog(3, "IDT: Got interrupt - %d", registers.interrupt);
 
     // For some reason using masterCommandPort here causes GPF
     // TODO: find cause and fix

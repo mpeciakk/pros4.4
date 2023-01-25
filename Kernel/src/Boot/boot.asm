@@ -1,6 +1,3 @@
-global _loader
-extern kmain
-
 MULTIBOOT_PAGE_ALIGN equ 1 << 0
 MULTIBOOT_MEMINFO    equ 1 << 1
 MULTIBOOT_MAGIC      equ 0x1BADB002
@@ -15,6 +12,12 @@ align 4
 dd MULTIBOOT_MAGIC
 dd MULTIBOOT_FLAGS
 dd MULTIBOOT_CHECKSUM
+
+section .bss
+align 16
+stack_bottom:
+    resb 16384 ; 16KB
+stack_top:
 
 section .data
 align 0x1000
@@ -32,8 +35,8 @@ bootPageDirectory:
     times (1024 - KERNEL_PAGE_NUMBER - 1) dd 0
 
 section .text
-align 4
-
+global _loader
+extern kmain
 _loader:
     ; load our boot page directory
     mov ecx, (bootPageDirectory - KERNEL_VIRTUAL_BASE)
@@ -60,7 +63,6 @@ startInHigherHalf:
 
     mov esp, stack_top
     push eax ; multiboot magic number
-
     push ebx ; multiboot info structure
     call kmain
 
@@ -69,9 +71,3 @@ startInHigherHalf:
 loopb:
     hlt
     jmp loopb
-
-section .bss
-align 32
-stack_bottom:
-    resb 16384 ; 16KB
-stack_top:

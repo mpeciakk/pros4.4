@@ -4,19 +4,23 @@
 #include <Multiboot.hpp>
 #include <Hardware/GDT.hpp>
 #include <Hardware/IDT.hpp>
+#include <MM/MemoryManager.hpp>
+#include <Lib/Types.hpp>
 
-extern "C" [[noreturn]] void kmain(multiboot_info* physMbi, u32 multibootMagic) {
+extern "C" [[noreturn]] void kmain(PhysicalAddress* mbi, u32 multibootMagic) {
     VGA::instance().clear();
     log(0, "Kernel loaded!");
+
+    klog(3, "%d", multibootMagic);
 
     GDT gdt;
     gdt.init();
 
     InterruptManager::instance().init();
 
-    performTests();
+    MemoryManager::instance().init(mbi);
 
-//    (*(u32*) 0x2137420) = 2137;
+    performTests();
 
     while (true) {}
 }

@@ -11,8 +11,6 @@ VGA::VGA() : commandPort(0x3D4), dataPort(0x3D5) {
 
     color = vgaColor(textColor, backgroundColor);
     memory = (u16*) VGA_ADDRESS;
-
-    klog(3, "VGA: Located at 0x%x", (u32) VGA_ADDRESS);
 }
 
 void VGA::clear() {
