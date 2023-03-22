@@ -12,8 +12,8 @@ MemoryManager::MemoryManager() {
 
 
 void MemoryManager::init(PhysicalAddress* physMbi) {
-    auto* mbi = (multiboot_info*) phys2virt(physMbi);
-    auto* grubMemoryMap = (multiboot_mmap_entry*) phys2virt(mbi->mmap_addr);
+    auto* mbi = (multiboot_info*) PHYS_2_VIRT(physMbi);
+    auto* grubMemoryMap = (multiboot_mmap_entry*) PHYS_2_VIRT(mbi->mmap_addr);
     auto grubMemoryMapSize = mbi->mmap_length;
 
     klog(3, "MM: GRUB memory map at 0x%x, with length 0x%x", (u32) grubMemoryMap, grubMemoryMapSize);
@@ -35,4 +35,5 @@ void MemoryManager::init(PhysicalAddress* physMbi) {
     klog(0, "MM: Memory size: %d KB", memorySize / 1024);
 
     initPMM(grubMemoryMap, grubMemoryMapSize);
+    initVMM();
 }

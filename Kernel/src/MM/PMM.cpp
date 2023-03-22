@@ -19,7 +19,7 @@ void MemoryManager::initPMM(multiboot_mmap_entry* grubMemoryMap, u32 grubMemoryM
          entry = (multiboot_mmap_entry*) ((u32) entry + entry->size + sizeof(entry->size))) {
 
         // TODO: add low and high together
-        auto address = u32(entry->addr_low);
+        auto address = (PhysicalAddress) entry->addr_low;
         auto length = entry->len_low;
 
         switch (entry->type) {
@@ -53,14 +53,14 @@ void MemoryManager::initPMM(multiboot_mmap_entry* grubMemoryMap, u32 grubMemoryM
 
     u32 kernelSize = (u32) &kernelEnd - (u32) &kernelStart;
     u32 memoryMapSize = memorySize / 8 / 4096;
-    setRegionUsed(0x00000000, 1_MB + kernelSize + memoryMapSize);
+    setRegionUsed((PhysicalAddress) 0x00000000, 2_MB);
 }
 
 void MemoryManager::setRegionUsed(PhysicalAddress start, u32 size) {
-    u32 base = start / BLOCK_SIZE;
+    u32 base = (u32) start / BLOCK_SIZE;
     u32 blocks = size / BLOCK_SIZE;
 
-    klog(3, "PMM: Region 0x%x-0x%x is used", start, start + size);
+    klog(3, "PMM: Region 0x%x-0x%x is used", start, (u32) start + size);
 
     for (; blocks > 0; blocks--) {
         setBit(base++);
@@ -71,10 +71,10 @@ void MemoryManager::setRegionUsed(PhysicalAddress start, u32 size) {
 }
 
 void MemoryManager::setRegionFree(PhysicalAddress start, u32 size) {
-    u32 base = start / BLOCK_SIZE;
+    u32 base = (u32) start / BLOCK_SIZE;
     u32 blocks = size / BLOCK_SIZE;
 
-    klog(3, "PMM: Region 0x%x-0x%x is free", start, start + size);
+    klog(3, "PMM: Region 0x%x-0x%x is free", start, (u32) start + size);
 
     for (; blocks > 0; blocks--) {
         unsetBit(base++);
@@ -100,14 +100,14 @@ PhysicalAddress* MemoryManager::getFreePhysicalPage(u32 size) {
         setBit(frame + i);
     }
 
-    PhysicalAddress address = frame * BLOCK_SIZE;
+    auto* address = (PhysicalAddress*) (frame * BLOCK_SIZE);
     usedBlocks += size;
 
-    return (PhysicalAddress*) address;
+    return address;
 }
 
 void MemoryManager::freePage(PhysicalAddress* ptr, u32 size) {
-    auto address = (PhysicalAddress) ptr;
+    auto address = (u32) ptr;
     int frame = address / BLOCK_SIZE;
 
     klog(3, "PMM: Deallocating %d blocks on address 0x%x", size, frame);
