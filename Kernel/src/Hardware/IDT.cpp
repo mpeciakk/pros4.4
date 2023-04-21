@@ -1,6 +1,6 @@
 #include <Hardware/IDT.hpp>
-#include <Lib/String.hpp>
 #include <Lib/Log.hpp>
+#include <Lib/String.hpp>
 
 extern "C" void IDTFlush(u32 pointer);
 
@@ -8,8 +8,7 @@ extern "C" void handleInterrupt(Registers registers) {
     InterruptManager::instance().handleInterrupt(registers);
 }
 
-InterruptManager::InterruptManager() : masterCommandPort(0x20), masterDataPort(0x21), slaveCommandPort(0xA0),
-                                       slaveDataPort(0xA1) {
+InterruptManager::InterruptManager() : masterCommandPort(0x20), masterDataPort(0x21), slaveCommandPort(0xA0), slaveDataPort(0xA1) {
     masterCommandPort.write(0x11);
     slaveCommandPort.write(0x11);
 
@@ -90,22 +89,18 @@ void InterruptManager::init() {
 }
 
 static inline void outb(u16 port, u8 val) {
-    asm volatile ( "outb %0, %1" : : "a"(val), "Nd"(port));
+    asm volatile("outb %0, %1" : : "a"(val), "Nd"(port));
 }
 
-void InterruptManager::handleInterrupt(Registers &registers) {
-    //klog(3, "IDT: Got interrupt - %d", registers.interrupt);
+void InterruptManager::handleInterrupt(Registers& registers) {
+    // klog(3, "IDT: Got interrupt - %d", registers.interrupt);
 
-    // For some reason using masterCommandPort here causes GPF
-    // TODO: find cause and fix
+    masterCommandPort.write(0x20);
 
     if (registers.interrupt >= 40) {
         outb(0xA0, 0x20);
     }
-
-    outb(0x20, 0x20);
 }
-
 
 void InterruptManager::setEntry(u8 i, u32 base, u16 selector, u8 flags) {
     entries[i].baseLow = base & 0xFFFF;

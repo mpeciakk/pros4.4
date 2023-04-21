@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.7)
 project(pros)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(CMAKE_CXX_USE_RESPONSE_FILE_FOR_INCLUDES Off)
 
 set(CMAKE_CXX_STANDARD 14)

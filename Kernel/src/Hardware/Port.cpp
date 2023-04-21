@@ -7,7 +7,7 @@ Port::Port(u16 portNumber) {
 Port8Bit::Port8Bit(u16 portNumber) : Port(portNumber) { }
 
 void Port8Bit::write(u8 data) {
-    asm volatile("outb %0, %1" ::"a"(data), "Nd"(portNumber));
+    asm volatile("outb %0, %1" : : "a"(data), "Nd"(portNumber));
 }
 
 u8 Port8Bit::read() {

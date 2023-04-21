@@ -20,6 +20,8 @@
 #define PAGE_TABLE_INDEX(x) ((((u32) x) >> 12) & 0x3ff)
 #define PAGE_GET_PHYSICAL_ADDRESS(x) ((*x) & ~0xFFF)
 
+#define GET_FRAME_ADDRESS(x) ((x & 0xFFFFF000) >> 12)
+
 struct PageTableEntry {
     int present: 1;
     int write: 1;
@@ -52,7 +54,7 @@ struct PageTable {
 } __attribute__((packed));
 
 struct PageDirectory {
-    int entries[PAGES_PER_DIR];
+    PageDirectoryEntry entries[PAGES_PER_DIR];
 } __attribute__((packed));
 
 STRONG_ALIAS(u32, PhysicalAddress)

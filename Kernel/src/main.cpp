@@ -20,16 +20,15 @@ extern "C" [[noreturn]] void kmain(PhysicalAddress* mbi, u32 multibootMagic) {
 
     MemoryManager::instance().init(mbi);
 
-    PhysicalAddress* a = MemoryManager::instance().getFreePhysicalPage();
-    PhysicalAddress* b = MemoryManager::instance().getFreePhysicalPage();
-    PhysicalAddress* c = MemoryManager::instance().getFreePhysicalPage();
+//    PhysicalAddress* a = MemoryManager::instance().getFreePhysicalPage();
+//    PhysicalAddress* b = MemoryManager::instance().getFreePhysicalPage();
+//    PhysicalAddress* c = MemoryManager::instance().getFreePhysicalPage();
 
-    klog(3, "0x%x", (u32) a);
-    klog(3, "0x%x", (u32) b);
-    klog(3, "0x%x", (u32) c);
+//    klog(3, "0x%x", (u32) a);
+//    klog(3, "0x%x", (u32) b);
+//    klog(3, "0x%x", (u32) c);
 
-
-    performTests();
+//    performTests();
 
     while (true) {}
 }
