@@ -1,3 +1,5 @@
+#include "Lib/String.hpp"
+#include "MM/kmalloc.hpp"
 #include <VGA.hpp>
 #include <Lib/Log.hpp>
 #include <Debug/Tests.hpp>
@@ -9,9 +11,6 @@
 
 extern "C" [[noreturn]] void kmain(PhysicalAddress* mbi, u32 multibootMagic) {
     VGA::instance().clear();
-    log(0, "Kernel loaded!");
-
-    klog(3, "%d", multibootMagic);
 
     GDT gdt;
     gdt.init();
@@ -20,15 +19,9 @@ extern "C" [[noreturn]] void kmain(PhysicalAddress* mbi, u32 multibootMagic) {
 
     MemoryManager::instance().init(mbi);
 
-//    PhysicalAddress* a = MemoryManager::instance().getFreePhysicalPage();
-//    PhysicalAddress* b = MemoryManager::instance().getFreePhysicalPage();
-//    PhysicalAddress* c = MemoryManager::instance().getFreePhysicalPage();
+    log(0, "Kernel loaded!");
 
-//    klog(3, "0x%x", (u32) a);
-//    klog(3, "0x%x", (u32) b);
-//    klog(3, "0x%x", (u32) c);
-
-//    performTests();
+    performTests();
 
     while (true) {}
 }

@@ -1,3 +1,4 @@
+#include "MM/kmalloc.hpp"
 #include <MM/MemoryManager.hpp>
 #include <Lib/Log.hpp>
 #include <Lib/String.hpp>
@@ -26,6 +27,11 @@ void MemoryManager::initVMM() {
     entry->frame = GET_FRAME_ADDRESS(VIRT_2_PHYS(table));
 
     setPageDirectory(dir);
+
+    auto physicalAddress = getFreePhysicalPage();
+    for (u32 virtualAddress = KERNEL_HEAP_START; virtualAddress < KERNEL_HEAP_START + KERNEL_HEAP_SIZE; physicalAddress = getFreePhysicalPage(), virtualAddress += PAGE_SIZE) {
+        mapPage((PhysicalAddress) (u32) physicalAddress, (VirtualAddress) virtualAddress);
+    }
 }
 
 void MemoryManager::setPageDirectory(PageDirectory* pageDirectory) {

@@ -12,6 +12,7 @@ build
 Toolchain/Build
 Toolchain/i686
 Toolchain/Tarballs
+Debug/
 Meta
 mount
 compile_commands.json
