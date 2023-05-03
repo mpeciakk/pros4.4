@@ -2,8 +2,7 @@
 .vscode
 .git
 iso
-pros.img
-pros.vdi
+disk.img
 kernel.map
 log.txt
 cmake-build-debug
@@ -14,6 +13,6 @@ Toolchain/i686
 Toolchain/Tarballs
 Debug/
 Meta
-mount
+setMount
 compile_commands.json
 .cache

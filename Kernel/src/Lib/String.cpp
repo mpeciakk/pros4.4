@@ -1,4 +1,5 @@
 #include <Lib/String.hpp>
+#include <MM/kmalloc.hpp>
 
 u32 strlen(const char* str) {
     u32 len = 0;
@@ -41,11 +42,51 @@ int strcmp(const char* a, const char* b) {
     return *(const unsigned char*) a - *(const unsigned char*) b;
 }
 
+char* strdup(const char* src) {
+    int len = strlen(src) + 1;
+    char* dst = (char*) kmalloc(len);
+    memcpy(dst, (void*) src, len);
+    return dst;
+}
+
 char* strcpy(char* strDest, const char* strSrc) {
     char* temp = strDest;
     while ((*strDest++ = *strSrc++) != '\0') {
     }
     return temp;
+}
+
+char* strcat(char* destination, const char* source) {
+    strcpy(destination + strlen(destination), source);
+    return destination;
+}
+
+char* strsep(char** stringp, const char* delim) {
+    char* s;
+    const char* spanp;
+    int c;
+    int sc;
+    char* tok;
+
+    if ((s = *stringp) == nullptr) {
+        return nullptr;
+    }
+
+    for (tok = s;;) {
+        c = *s++;
+        spanp = delim;
+        do {
+            if ((sc = *spanp++) == c) {
+                if (c == 0) {
+                    s = nullptr;
+                } else {
+                    s[-1] = 0;
+                }
+                *stringp = s;
+                return (tok);
+            }
+        } while (sc != 0);
+    }
 }
 
 u32 countDigit(u32 n, u32 base) {

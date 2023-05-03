@@ -18,7 +18,7 @@ void MemoryManager::initVMM() {
         page.write = true;
         page.frame = GET_FRAME_ADDRESS(physicalAddress);
 
-        table->entries[PAGE_TABLE_INDEX(virtualAddress)] = *((int*) &page);
+        table->entries[PAGE_TABLE_INDEX(virtualAddress)] = page;
     }
 
     auto entry = &dir->entries[PAGE_DIRECTORY_INDEX(0xC0000000)];

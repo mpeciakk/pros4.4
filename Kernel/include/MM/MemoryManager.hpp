@@ -50,7 +50,7 @@ struct PageDirectoryEntry {
 } __attribute__((packed));
 
 struct PageTable {
-    int entries[PAGES_PER_TABLE];
+    PageTableEntry entries[PAGES_PER_TABLE];
 } __attribute__((packed));
 
 struct PageDirectory {

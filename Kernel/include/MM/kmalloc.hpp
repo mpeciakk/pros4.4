@@ -1,5 +1,5 @@
-#ifndef __KMALLOC_HPP
-#define __KMALLOC_HPP
+#ifndef PROS_KMALLOC_HPP
+#define PROS_KMALLOC_HPP
 
 #include <Lib/Log.hpp>
 #include <Lib/Types.hpp>

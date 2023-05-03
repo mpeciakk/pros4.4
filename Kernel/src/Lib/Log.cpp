@@ -77,6 +77,13 @@ void printf(const char* __restrict format, va_list parameters, bool serial) {
     }
 }
 
+void __log(const char* __restrict format, ...) {
+    va_list parameters;
+    va_start(parameters, format);
+    printf(format, parameters);
+    va_end(parameters);
+}
+
 void log(int level, const char* __restrict format, ...) {
     va_list parameters;
     va_start(parameters, format);

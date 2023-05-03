@@ -1,5 +1,5 @@
-#ifndef __HEAP_HPP
-#define __HEAP_HPP
+#ifndef PROS_HEAP_HPP
+#define PROS_HEAP_HPP
 
 #include <Lib/Types.hpp>
 
